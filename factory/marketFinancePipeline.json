@@ -1,0 +1,9 @@
+{
+	"name": "marketFinancePipeline",
+	"location": "australiaeast",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a126c0ef-0efd-468b-a868-8855dd2285b4",
+		"tenantId": "6187e445-4b11-47cd-8d86-bc00f7c39b7c"
+	}
+}

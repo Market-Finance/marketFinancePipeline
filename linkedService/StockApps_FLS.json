@@ -5,9 +5,9 @@
 		"annotations": [],
 		"type": "AzureFunction",
 		"typeProperties": {
-			"functionAppUrl": "https://stockapps.azurewebsites.net/api/orchestrators/analysis_subOrch?name=Functions",
+			"functionAppUrl": "https://stockapps.azurewebsites.net/api/orchestrators/orchestrator?name=Functions",
 			"authentication": "Anonymous",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDI5QTFBQTM2LUE0OTgtNDM5NS1BMEE3LTQwQUYyMkE1NjBBRl81MDk2ZDQ0Ny1lODI5LTRkZTYtYTRkZS0zYzkzODc2NjJmZDkiDQp9"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDI5QTFBQTM2LUE0OTgtNDM5NS1BMEE3LTQwQUYyMkE1NjBBRl83NGEwYzZmMS1kZmJmLTQzZTYtOTljYS1hMzYxMjc3NzU5MDYiDQp9"
 		}
 	}
 }

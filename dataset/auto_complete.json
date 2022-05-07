@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "auto_complete.json",
 				"folderPath": "MarketFinance/common",
 				"container": "marketessential"
 			}

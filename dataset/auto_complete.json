@@ -1,0 +1,19 @@
+{
+	"name": "auto_complete",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "delete_common_app_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "auto_complete.json",
+				"folderPath": "MarketFinance/common",
+				"container": "marketessential"
+			}
+		}
+	}
+}

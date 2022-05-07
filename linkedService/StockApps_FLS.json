@@ -7,7 +7,7 @@
 		"typeProperties": {
 			"functionAppUrl": "https://stocksapps.azurewebsites.net/api/orchestrators/orchestrator?name=Functions",
 			"authentication": "Anonymous",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDI5QTFBQTM2LUE0OTgtNDM5NS1BMEE3LTQwQUYyMkE1NjBBRl8xM2U2ZjU0Yy00NTdmLTQ1ZjItOTQ4My1iMmMxNGZiNGNhMDIiDQp9"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDI5QTFBQTM2LUE0OTgtNDM5NS1BMEE3LTQwQUYyMkE1NjBBRl9hYTZlMzdmNS03ZjJmLTRhNzAtYWVmZC1hYWE5MzdmNWI5NDUiDQp9"
 		}
 	}
 }

@@ -22,6 +22,64 @@
 					"referenceName": "CommonAppFLS",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "Check Completed Status",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "CommonApp- Durable Function Cell",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(or(equals(activity('Get Current Function Status').output.runtimeStatus, 'Pending'), equals(activity('Get Current Function Status').output.runtimeStatus, 'Running')))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Wait 5 seconds",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 5
+							}
+						},
+						{
+							"name": "Get Current Function Status",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Wait 5 seconds",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@activity('CommonApp- Durable Function Cell').output.statusQueryGetUri",
+									"type": "Expression"
+								},
+								"method": "GET"
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
 			}
 		],
 		"annotations": []

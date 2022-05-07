@@ -24,7 +24,7 @@
 				}
 			},
 			{
-				"name": "Check Completed Status",
+				"name": "Check Completed Status- CA",
 				"type": "Until",
 				"dependsOn": [
 					{
@@ -37,12 +37,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@not(or(equals(activity('Get Current Function Status').output.runtimeStatus, 'Pending'), equals(activity('Get Current Function Status').output.runtimeStatus, 'Running')))",
+						"value": "@not(or(equals(activity('Get Current Function Status- CA').output.runtimeStatus, 'Pending'), equals(activity('Get Current Function Status- CA').output.runtimeStatus, 'Running')))",
 						"type": "Expression"
 					},
 					"activities": [
 						{
-							"name": "Wait 5 seconds",
+							"name": "Wait 5 seconds- CA",
 							"type": "Wait",
 							"dependsOn": [],
 							"userProperties": [],
@@ -51,11 +51,11 @@
 							}
 						},
 						{
-							"name": "Get Current Function Status",
+							"name": "Get Current Function Status- CA",
 							"type": "WebActivity",
 							"dependsOn": [
 								{
-									"activity": "Wait 5 seconds",
+									"activity": "Wait 5 seconds- CA",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -82,9 +82,16 @@
 				}
 			},
 			{
-				"name": "MarketApp- Durable Function Cell",
+				"name": "MarketApp- Durable Function Call",
 				"type": "AzureFunctionActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Check Completed Status- CA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -92,7 +99,73 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "orchestrator",
+					"method": "GET"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureFunction1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Check Completed Status- MA",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "MarketApp- Durable Function Call",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(or(equals(activity('Get Current Function Status- MA').output.runtimeStatus, 'Pending'), \nequals(activity('Get Current Function Status- MA').output.runtimeStatus, 'Running')))\n",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Wait 5 seconds- MA",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 5
+							}
+						},
+						{
+							"name": "Get Current Function Status- MA",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Wait 5 seconds- MA",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@activity('MarketApp- Durable Function Call').output.statusQueryGetUri",
+									"type": "Expression"
+								},
+								"method": "GET"
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
 			}
 		],
 		"annotations": []

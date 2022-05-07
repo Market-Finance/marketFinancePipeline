@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "CommonApp- Durable Function Cell",
+				"name": "CommonApp- Durable Function Call",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [],
 				"policy": {
@@ -28,7 +28,7 @@
 				"type": "Until",
 				"dependsOn": [
 					{
-						"activity": "CommonApp- Durable Function Cell",
+						"activity": "CommonApp- Durable Function Call",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -71,7 +71,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"url": {
-									"value": "@activity('CommonApp- Durable Function Cell').output.statusQueryGetUri",
+									"value": "@activity('CommonApp- Durable Function Call').output.statusQueryGetUri",
 									"type": "Expression"
 								},
 								"method": "GET"
@@ -80,6 +80,19 @@
 					],
 					"timeout": "7.00:00:00"
 				}
+			},
+			{
+				"name": "MarketApp- Durable Function Cell",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
 			}
 		],
 		"annotations": []

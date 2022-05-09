@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Common App- Durable Function Call",
+				"name": "CommonApp- Durable Function Call",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [
 					{
@@ -35,7 +35,7 @@
 				"type": "Until",
 				"dependsOn": [
 					{
-						"activity": "Common App- Durable Function Call",
+						"activity": "CommonApp- Durable Function Call",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -238,7 +238,7 @@
 				"type": "AzureFunctionActivity",
 				"dependsOn": [
 					{
-						"activity": "Delete StockApps App files",
+						"activity": "Delete Stock App files",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -309,7 +309,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"url": {
-									"value": "@activity('StocksApps- Durable Function Call').output.statusQueryGetUri",
+									"value": "@activity('StockApps- Durable Function Call').output.statusQueryGetUri",
 									"type": "Expression"
 								},
 								"method": "GET"
@@ -320,7 +320,7 @@
 				}
 			},
 			{
-				"name": "Delete StockApps App files",
+				"name": "Delete Stock App files",
 				"type": "Delete",
 				"dependsOn": [
 					{

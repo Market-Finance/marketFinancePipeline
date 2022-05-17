@@ -5,14 +5,7 @@
 			{
 				"name": "CommonApp- Durable Function Call",
 				"type": "AzureFunctionActivity",
-				"dependsOn": [
-					{
-						"activity": "Delete Common App files",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -89,11 +82,11 @@
 				}
 			},
 			{
-				"name": "MarketsApp- Durable Function Call",
+				"name": "MarketApp- Durable Function Call",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [
 					{
-						"activity": "Delete Market App files",
+						"activity": "Check Completed Status- CA",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -121,7 +114,7 @@
 				"type": "Until",
 				"dependsOn": [
 					{
-						"activity": "MarketsApp- Durable Function Call",
+						"activity": "MarketApp- Durable Function Call",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -164,7 +157,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"url": {
-									"value": "@activity('MarketsApp- Durable Function Call').output.statusQueryGetUri",
+									"value": "@activity('MarketApp- Durable Function Call').output.statusQueryGetUri",
 									"type": "Expression"
 								},
 								"method": "GET"
@@ -172,193 +165,11 @@
 						}
 					],
 					"timeout": "7.00:00:00"
-				}
-			},
-			{
-				"name": "Delete Common App files",
-				"type": "Delete",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "Delete_old_files",
-						"type": "DatasetReference"
-					},
-					"enableLogging": true,
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true,
-						"wildcardFileName": "*.json",
-						"enablePartitionDiscovery": false
-					}
-				}
-			},
-			{
-				"name": "Delete Market App files",
-				"type": "Delete",
-				"dependsOn": [
-					{
-						"activity": "Check Completed Status- CA",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "Delete_old_files",
-						"type": "DatasetReference"
-					},
-					"enableLogging": true,
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true,
-						"wildcardFileName": "*.json",
-						"enablePartitionDiscovery": false
-					}
-				}
-			},
-			{
-				"name": "StockApps- Durable Function Call",
-				"type": "AzureFunctionActivity",
-				"dependsOn": [
-					{
-						"activity": "Delete Stock App files",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"functionName": "orchestrator",
-					"method": "GET"
-				},
-				"linkedServiceName": {
-					"referenceName": "StockApps_FLS",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Check Completed Status- SA",
-				"type": "Until",
-				"dependsOn": [
-					{
-						"activity": "StockApps- Durable Function Call",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"expression": {
-						"value": "@not(or(equals(activity('Get Current Function Status- SA').output.runtimeStatus, 'Pending'), \nequals(activity('Get Current Function Status- SA').output.runtimeStatus, 'Running')))",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Wait 5 seconds- SA",
-							"type": "Wait",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 5
-							}
-						},
-						{
-							"name": "Get Current Function Status- SA",
-							"type": "WebActivity",
-							"dependsOn": [
-								{
-									"activity": "Wait 5 seconds- SA",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"url": {
-									"value": "@activity('StockApps- Durable Function Call').output.statusQueryGetUri",
-									"type": "Expression"
-								},
-								"method": "GET"
-							}
-						}
-					],
-					"timeout": "7.00:00:00"
-				}
-			},
-			{
-				"name": "Delete Stock App files",
-				"type": "Delete",
-				"dependsOn": [
-					{
-						"activity": "Check Completed Status- MA",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "Delete_old_files",
-						"type": "DatasetReference"
-					},
-					"logStorageSettings": {
-						"linkedServiceName": {
-							"referenceName": "delete_old_files_ls",
-							"type": "LinkedServiceReference"
-						}
-					},
-					"enableLogging": true,
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true,
-						"wildcardFileName": "*.json",
-						"enablePartitionDiscovery": false
-					}
 				}
 			}
 		],
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2022-05-07T00:32:34Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }

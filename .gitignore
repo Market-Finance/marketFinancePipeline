@@ -129,4 +129,6 @@ dmypy.json
 .pyre/
 
 # folder
-marketFinancePipeline/dataset/
+dataset/
+factory/
+linkedService/

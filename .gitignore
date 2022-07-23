@@ -129,6 +129,6 @@ dmypy.json
 .pyre/
 
 # folder
-dataset/
-factory/
-linkedService/
+.dataset/
+.factory/
+.linkedService/

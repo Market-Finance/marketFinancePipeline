@@ -413,6 +413,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/News_app_files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "delete_common_app_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "MarketFinance/news",
+						"container": "marketessential"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/delete_common_app_ls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/marketFinance')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -860,7 +883,7 @@
 									"dependsOn": [],
 									"userProperties": [],
 									"typeProperties": {
-										"waitTimeInSeconds": 1
+										"waitTimeInSeconds": 5
 									}
 								},
 								{
@@ -894,6 +917,135 @@
 							],
 							"timeout": "7.00:00:00"
 						}
+					},
+					{
+						"name": "Delete News App files",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Check Complete  Status- SA",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "News_app_files",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "delete_common_app_ls",
+									"type": "LinkedServiceReference"
+								},
+								"path": "marketessential/MarketFinance/news"
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"wildcardFileName": ".json",
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "NewsApps- Durable Function Call",
+						"type": "AzureFunctionActivity",
+						"dependsOn": [
+							{
+								"activity": "Delete News App files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"functionName": "NewsApps",
+							"method": "GET",
+							"headers": {}
+						},
+						"linkedServiceName": {
+							"referenceName": "NewsApps_FLS",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Check Complete Status- NA",
+						"type": "Until",
+						"dependsOn": [
+							{
+								"activity": "NewsApps- Durable Function Call",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@not(or(equals(activity('Get Current Function Status- NA').output.runtimeStatus, 'Pending'), \nequals(activity('Get Current Function Status- NA').output.runtimeStatus, 'Running')))",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Wait for 2 seconds",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
+								},
+								{
+									"name": "Get Current Function Status- NA",
+									"type": "WebActivity",
+									"dependsOn": [
+										{
+											"activity": "Wait for 2 seconds",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@activity('NewsApps- Durable Function Call').output.statusQueryGetUri",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"headers": {}
+									}
+								}
+							],
+							"timeout": "7.00:00:00"
+						}
 					}
 				],
 				"policy": {
@@ -911,6 +1063,8 @@
 				"[concat(variables('factoryId'), '/datasets/Market_app_files')]",
 				"[concat(variables('factoryId'), '/datasets/stock_app_files')]",
 				"[concat(variables('factoryId'), '/linkedServices/StockApps_FLS')]",
+				"[concat(variables('factoryId'), '/datasets/News_app_files')]",
+				"[concat(variables('factoryId'), '/linkedServices/NewsApps_FLS')]",
 				"[concat(variables('factoryId'), '/linkedServices/delete_common_app_ls')]"
 			]
 		}

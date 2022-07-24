@@ -1067,6 +1067,37 @@
 				"[concat(variables('factoryId'), '/linkedServices/NewsApps_FLS')]",
 				"[concat(variables('factoryId'), '/linkedServices/delete_common_app_ls')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "marketFinance",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2022-07-24T09:31:00Z",
+						"timeZone": "UTC",
+						"schedule": {}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/marketFinance')]"
+			]
 		}
 	]
 }

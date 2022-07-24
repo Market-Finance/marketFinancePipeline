@@ -5,7 +5,14 @@
 			{
 				"name": "CommonApp- Durable Function Call",
 				"type": "AzureFunctionActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Delete auto complete new",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -86,7 +93,7 @@
 				"type": "AzureFunctionActivity",
 				"dependsOn": [
 					{
-						"activity": "Check Completed Status- CA",
+						"activity": "Delete Market App files",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -158,6 +165,299 @@
 							"typeProperties": {
 								"url": {
 									"value": "@activity('MarketApp- Durable Function Call').output.statusQueryGetUri",
+									"type": "Expression"
+								},
+								"method": "GET"
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
+			},
+			{
+				"name": "Copy Data to new to old",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Delete auto complete old",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "MarketFinance/common/auto_complete_new",
+							"wildcardFileName": ".json",
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "auto_complete_new",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "auto_complete_old",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Delete auto complete old",
+				"type": "Delete",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "auto_complete_old",
+						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "delete_common_app_ls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "marketessential/MarketFinance/common/auto_complete_old"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"wildcardFileName": ".json",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Delete auto complete new",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy Data to new to old",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "auto_complete_new",
+						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "delete_common_app_ls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "marketessential/MarketFinance/common/auto_complete_new"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"wildcardFileName": ".json",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Delete Market App files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Check Completed Status- CA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Market_app_files",
+						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "delete_common_app_ls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "marketessential/MarketFinance/market"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"wildcardFileName": ".json",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Delete Stock App files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Check Completed Status- MA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "stock_app_files",
+						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "delete_common_app_ls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "marketessential/MarketFinance/stock"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"wildcardFileName": ".json",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "StocksApps- Durable Function Call",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [
+					{
+						"activity": "Delete Stock App files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "orchestrator",
+					"method": "GET"
+				},
+				"linkedServiceName": {
+					"referenceName": "StockApps_FLS",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Check Complete  Status- SA",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "StocksApps- Durable Function Call",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(or(equals(activity('Get Current Function Status- SA').output.runtimeStatus, 'Pending'), \nequals(activity('Get Current Function Status- SA').output.runtimeStatus, 'Running')))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Wait 5 seconds- SA",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						},
+						{
+							"name": "Get Current Function Status- SA",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Wait 5 seconds- SA",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@activity('StocksApps- Durable Function Call').output.statusQueryGetUri",
 									"type": "Expression"
 								},
 								"method": "GET"

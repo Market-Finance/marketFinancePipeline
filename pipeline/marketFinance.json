@@ -130,7 +130,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@not(or(equals(activity('Get Current Function Status- MA').output.runtimeStatus, 'Pending'), \nequals(activity('Get Current Function Status- MA').output.runtimeStatus, 'Running')))\n",
+						"value": "@not(or(equals(activity('Get Current Function Status- MA').output.runtimeStatus, 'Pending'), \nequals(activity('Get Current Function Status- MA').output.runtimeStatus, 'Running')))",
 						"type": "Expression"
 					},
 					"activities": [
@@ -156,7 +156,7 @@
 							],
 							"policy": {
 								"timeout": "7.00:00:00",
-								"retry": 0,
+								"retry": 100,
 								"retryIntervalInSeconds": 30,
 								"secureOutput": false,
 								"secureInput": false
@@ -252,7 +252,7 @@
 				"type": "Delete",
 				"dependsOn": [
 					{
-						"activity": "Check Completed Status- MA",
+						"activity": "Check Completed Status- CA",
 						"dependencyConditions": [
 							"Succeeded"
 						]

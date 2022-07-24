@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "marketFinancePipeline"
+		},
+		"AzureFunction1_functionKey": {
+			"value": ""
+		},
+		"AzureFunction2_functionKey": {
+			"value": ""
+		},
+		"CommonAppFLS_functionKey": {
+			"value": ""
+		},
+		"NewsApps_FLS_functionKey": {
+			"value": ""
+		},
+		"StockApps_FLS_functionKey": {
+			"value": ""
+		},
+		"delete_common_app_ls_connectionString": {
+			"value": ""
+		},
+		"delete_old_files_ls_connectionString": {
+			"value": ""
+		},
+		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+			"value": "https://marketsapp.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"AzureFunction2_properties_typeProperties_functionAppUrl": {
+			"value": "https://stocksapps.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"CommonAppFLS_properties_typeProperties_functionAppUrl": {
+			"value": "https://commonApp.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"NewsApps_FLS_properties_typeProperties_functionAppUrl": {
+			"value": "https://newsapps.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"StockApps_FLS_properties_typeProperties_functionAppUrl": {
+			"value": "https://stockapps.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		}
+	}
+}

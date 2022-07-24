@@ -1,0 +1,126 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "marketFinancePipeline"
+		},
+		"AzureFunction1_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'AzureFunction1'"
+		},
+		"AzureFunction2_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'AzureFunction2'"
+		},
+		"CommonAppFLS_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'CommonAppFLS'"
+		},
+		"NewsApps_FLS_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'NewsApps_FLS'"
+		},
+		"StockApps_FLS_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'StockApps_FLS'"
+		},
+		"delete_common_app_ls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'delete_common_app_ls'"
+		},
+		"delete_old_files_ls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'delete_old_files_ls'"
+		},
+		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://marketsapp.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"AzureFunction2_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://stocksapps.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"CommonAppFLS_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://commonApp.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"NewsApps_FLS_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://newsapps.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"StockApps_FLS_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://stockapps.azurewebsites.net/api/orchestrators/orchestrator?name=Functions"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "marketFinancePipeline_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureFunction1_functionKey": {
+						"value": "[parameters('AzureFunction1_functionKey')]"
+					},
+					"AzureFunction2_functionKey": {
+						"value": "[parameters('AzureFunction2_functionKey')]"
+					},
+					"CommonAppFLS_functionKey": {
+						"value": "[parameters('CommonAppFLS_functionKey')]"
+					},
+					"NewsApps_FLS_functionKey": {
+						"value": "[parameters('NewsApps_FLS_functionKey')]"
+					},
+					"StockApps_FLS_functionKey": {
+						"value": "[parameters('StockApps_FLS_functionKey')]"
+					},
+					"delete_common_app_ls_connectionString": {
+						"value": "[parameters('delete_common_app_ls_connectionString')]"
+					},
+					"delete_old_files_ls_connectionString": {
+						"value": "[parameters('delete_old_files_ls_connectionString')]"
+					},
+					"AzureFunction1_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]"
+					},
+					"AzureFunction2_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('AzureFunction2_properties_typeProperties_functionAppUrl')]"
+					},
+					"CommonAppFLS_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('CommonAppFLS_properties_typeProperties_functionAppUrl')]"
+					},
+					"NewsApps_FLS_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('NewsApps_FLS_properties_typeProperties_functionAppUrl')]"
+					},
+					"StockApps_FLS_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('StockApps_FLS_properties_typeProperties_functionAppUrl')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

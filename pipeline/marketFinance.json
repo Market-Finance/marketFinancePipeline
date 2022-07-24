@@ -188,7 +188,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "auto_complete_new",
+						"referenceName": "auto_complete",
 						"type": "DatasetReference"
 					},
 					"logStorageSettings": {
